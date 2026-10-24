@@ -95,7 +95,7 @@ def _precio_positivo(valor: str) -> Optional[float]:
         return None
 
     # Evita aceptar infinito, NaN o valores que redondeen a cero.
-    return precio if math.isfinite(precio) and precio > 0 else None
+    return precio if math.isfinite(precio) and precio >= 0 else None
 
 
 def validar_fila(
