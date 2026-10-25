@@ -1,6 +1,8 @@
 ## Laboratorio: ETL de ventas con Airflow, pruebas y CI
 
-## TODAS LAS EVIDENCIAS DE LA EJECUCION DEL LABORATORIO, INCLUIDO CORRIDAS DEL DAG Y LA INTEGRACION CONTINUA SE ENCUENTRAN EN LA CARPETA EVIDENCIAS DEL REPOSITORIO
+## TODAS LAS EVIDENCIAS DE LA EJECUCION DEL LABORATORIO, INCLUIDO CORRIDAS DEL DAG Y LA INTEGRACION CONTINUA SE ENCUENTRAN EN EL ARCHIVO DEL REPOSITORIO "Taller Modulo 6 y 7.xls"
+
+Taller Modulo 6 y 7.xlsx  -- https://github.com/lulebebe/etl-ventas-airflow/blob/51b587c4c745f0a2284e870ef61735542b00d5f9/Taller%20Modulo%206%20y%207.xlsx  -- Se pueden visualizar o descargar
 
 Una cadena de tiendas de tecnología tiene locales en tres regiones: norte, sur y centro. Cada noche, el
 sistema de caja deja un archivo CSV con las ventas del día en una carpeta compartida. el proceso a optimizar 
@@ -170,6 +172,184 @@ FAILED tests/test_reglas.py::test_calidad_rechaza_sobre_el_umbral - NotImplement
 <img width="700" height="92" alt="image" src="https://github.com/user-attachments/assets/f3417ff2-99e6-467d-9e63-aaf47ec216ac" />
 
 <img width="700" height="282" alt="image" src="https://github.com/user-attachments/assets/fb52ef51-aa33-4cff-8451-853350f280c3" />
+
+
+### EJECUCION DE LOS DAG
+
+#### Visualizacion del DAG y sus cinco tareas
+
+<img width="700" height="545" alt="image" src="https://github.com/user-attachments/assets/4f1e8679-b069-40da-b4e0-b0244f9cd902" />
+
+
+#### se ejecuta el primer dag con el archivo del 5 de octubre, la ejecuciones exitosa
+
+<img width="700" height="865" alt="image" src="https://github.com/user-attachments/assets/0f3dfb51-7073-48c9-bba0-9fe4f3ef5ddb" />
+
+
+#### por defecto el trigger es con el archivo del 5 de octubre
+
+<img width="700" height="444" alt="image" src="https://github.com/user-attachments/assets/87654e2d-b556-4bbe-ad4d-5666a82ea153" />
+
+#### visualizacion grafica de la ejecucion
+
+<img width="700" height="216" alt="image" src="https://github.com/user-attachments/assets/0cfda4c8-fe7a-497f-bc8b-1566e7ebf73e" />
+
+
+#### segunda ejecucion, 6 de octubre, satisfactoria la ejecucion
+
+<img width="700" height="660" alt="image" src="https://github.com/user-attachments/assets/4747c0f7-ee23-4572-a8a4-8ece1dd10c53" />
+
+
+#### log de las dos ejecuciones, actualizar resumen
+
+<img width="700" height="214" alt="image" src="https://github.com/user-attachments/assets/d1e01c17-8b73-4551-a3c9-0806adbde41a" />
+
+<img width="700" height="232" alt="image" src="https://github.com/user-attachments/assets/d1371ec2-705e-49c5-8c11-ddb003638fb0" />
+
+
+#### log de las tareas cargar para las dos ejecuciones
+
+
+<img width="700" height="200" alt="image" src="https://github.com/user-attachments/assets/1af908ec-5375-4233-a0e7-4b1e1473ba4b" />
+
+<img width="700" height="181" alt="image" src="https://github.com/user-attachments/assets/6c50155e-0318-43b5-8731-175705174b0f" />
+
+
+#### ejecuciones que terminaron satisfactoriamente
+
+<img width="700" height="180" alt="image" src="https://github.com/user-attachments/assets/e20004ce-9504-4c78-aff4-980665083a72" />
+
+<img width="700" height="180" alt="image" src="https://github.com/user-attachments/assets/027b27ec-00f7-434b-8976-982ca4b95967" />
+
+
+#### el dag del 7 de octubre falla en validar calidad
+
+
+<img width="700" height="724" alt="image" src="https://github.com/user-attachments/assets/7b5e3ac9-3d05-4552-a756-32f38aba85f7" />
+
+
+#### log  de la tarea valida calidad, se rechaza el 58,5% de las filas, el maximo es 20%
+
+
+<img width="700" height="424" alt="image" src="https://github.com/user-attachments/assets/c600a89f-38cb-4790-bedd-84895435d24f" />
+
+#### la mayoria de los rechazos  es por precio invalido
+
+<img width="700" height="655" alt="image" src="https://github.com/user-attachments/assets/5cbe5655-b9c6-44c4-b74a-af4607880e16" />
+
+
+#### visualizacion grafica de la ejecucion fallida
+
+
+<img width="700" height="165" alt="image" src="https://github.com/user-attachments/assets/56386705-194c-4b45-9349-5ab1ef4cc9a7" />
+
+
+#### se actualiza el archivo csv del 7 de octubre
+
+<img width="700" height="720" alt="image" src="https://github.com/user-attachments/assets/9effb5d3-46d7-45a4-958c-46538b2b01c7" />
+
+
+#### ejecucion satisfactoria
+
+<img width="700" height="158" alt="image" src="https://github.com/user-attachments/assets/b7bf808e-53ef-43d9-ae69-f209b1c87644" />
+
+
+#### log de las tareas  actualizar resumen, transformar  y cargar del archivo del 7 de octubre
+
+
+<img width="700" height="173" alt="image" src="https://github.com/user-attachments/assets/ea6454e1-7762-45a3-bb6d-b356e9aac9f3" />
+
+<img width="700" height="114" alt="image" src="https://github.com/user-attachments/assets/bfd0e14c-1c2c-44ce-b8b3-9c21c0c2467f" />
+
+
+<img width="700" height="202" alt="image" src="https://github.com/user-attachments/assets/0f1d477d-2f57-4e5f-a709-19c5b9400dea" />
+
+
+#### verificacion sql de las tres ejecuciones  satisfactorias
+
+
+<img width="700" height="836" alt="image" src="https://github.com/user-attachments/assets/5659d79d-139f-4445-bcfc-2c4379e289b7" />
+
+
+#### se ejecuta nuevamente  el archivo del 5 de octubre
+
+
+<img width="700" height="566" alt="image" src="https://github.com/user-attachments/assets/b0977440-5252-4055-8051-f4178e2714e6" />
+
+
+#### la ejecucion es satisfactoria
+
+<img width="700" height="736" alt="image" src="https://github.com/user-attachments/assets/7cd5dc15-3edb-42fd-a2be-fa017b82ed00" />
+
+#### sin embargo en la base de datos  no se alteran los resultados por la doble ejecucion
+
+<img width="700" height="852" alt="image" src="https://github.com/user-attachments/assets/a71b0f6f-5237-4eaa-a28d-a82d8440c08f" />
+
+
+### INTEGRACION CONTINUA
+
+#### se actualiza previamente el archivo ci.yml de github, se actualiza el repositorio de GITHUB
+### Este YAML valida el código y ejecuta las pruebas automatizadas. No vuelve a procesar los tres CSV ni levanta PostgreSQL para ejecutar sql/verificacion.sql.
+
+<img width="700" height="880" alt="image" src="https://github.com/user-attachments/assets/c2846b66-5255-4ec6-850b-0651d8aae15b" />
+
+
+#### Se crea otra rama de GITHUB, feature/precio-cero
+
+<img width="700" height="379" alt="image" src="https://github.com/user-attachments/assets/0650c75e-1a63-4161-9b24-deef476023f8" />
+
+#### despues de actualizar reglas.py para que aceptara valores en cero, se actuaiza la version en la nueva rama
+
+
+<img width="700" height="601" alt="image" src="https://github.com/user-attachments/assets/8bc6a8e3-cb3e-4e74-944e-17a79540933e" />
+
+#### en GITHUB se compara y se realiza el pull request
+
+<img width="700" height="192" alt="image" src="https://github.com/user-attachments/assets/1780aec1-883b-48df-8014-64dc1a074ffb" />
+
+
+#### se abre la solicitud y se activa el pull
+
+
+<img width="700" height="846" alt="image" src="https://github.com/user-attachments/assets/827241e6-7320-47cf-a503-9a7406dc2da1" />
+
+
+#### El CI falla en ejecutar pruebas automatizadas
+
+<img width="700" height="640" alt="image" src="https://github.com/user-attachments/assets/2b37f271-b42c-428c-93ec-c5a022007192" />
+
+
+#### se visualiza  el CI fallido
+
+<img width="700" height="659" alt="image" src="https://github.com/user-attachments/assets/0bbce578-b276-486a-b81c-867defb559c7" />
+
+#### se revierte el cambio en GITHUB
+
+<img width="700" height="590" alt="image" src="https://github.com/user-attachments/assets/e544049c-3926-4e8f-a55d-8b5b65f93c58" />
+
+
+#### la nueva ejecucion de CI es satisfactoria
+
+<img width="700" height="1014" alt="image" src="https://github.com/user-attachments/assets/72085087-2b8f-44f8-8ce6-12e667c17407" />
+
+#### visualizacion de la ejecucion satisfactoria del CI
+
+<img width="700" height="433" alt="image" src="https://github.com/user-attachments/assets/793cacf0-4983-4d49-84c2-9579231bfe71" />
+
+
+#### se busca en GITHUB la solicitud de pull para hacer el merge
+
+
+<img width="700" height="567" alt="image" src="https://github.com/user-attachments/assets/911b437d-ab83-4de0-9ae3-3c4d0373fb77" />
+
+
+#### se realiza el merge
+
+<img width="700" height="998" alt="image" src="https://github.com/user-attachments/assets/f94fc8b4-57fe-4ac4-a2a2-363d8436b023" />
+
+#### confirmacion del revert, pull request fusionada sobre la rama principal
+
+<img width="700" height="618" alt="image" src="https://github.com/user-attachments/assets/268ccf35-fb47-4dd1-92e1-aae5ba6ab15d" />
 
 
 ## Respuestas
