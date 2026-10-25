@@ -1,9 +1,10 @@
 ## Laboratorio: ETL de ventas con Airflow, pruebas y CI
 
-## TODAS LAS EVIDENCIAS DE LA EJECUCION DEL LABORATORIO, INCLUIDO CORRIDAS DEL DAG Y LA INTEGRACION CONTINUA SE ENCUENTRAN EN EL ARCHIVO DEL REPOSITORIO "Taller Modulo 6 y 7.xls"
+## TODAS LAS EVIDENCIAS DE LA EJECUCION DEL LABORATORIO, INCLUIDO CORRIDAS DEL DAG Y LA INTEGRACION CONTINUA TAMBIEN SE ENCUENTRAN EN EL ARCHIVO DEL REPOSITORIO "Taller Modulo 6 y 7.xls"
 
 Taller Modulo 6 y 7.xlsx  -- https://github.com/lulebebe/etl-ventas-airflow/blob/51b587c4c745f0a2284e870ef61735542b00d5f9/Taller%20Modulo%206%20y%207.xlsx  -- Se pueden visualizar o descargar
 
+### Situacion
 Una cadena de tiendas de tecnología tiene locales en tres regiones: norte, sur y centro. Cada noche, el
 sistema de caja deja un archivo CSV con las ventas del día en una carpeta compartida. el proceso a optimizar 
 abre manualmente esos archivos en Excel, los limpia y pega los totales en un reporte. No se conoce qué filas se
@@ -363,6 +364,7 @@ La corrida del 7 de octubre falla dado que el nivel de rechazos  fue superior al
 <img width="700" height="424" alt="image" src="https://github.com/user-attachments/assets/ec07c7e6-1755-4e01-9d2b-1a56ef0654c8" />
 
 <img width="700" height="655" alt="image" src="https://github.com/user-attachments/assets/8394da18-d454-4823-8a2f-a74c57518319" />
+
 
 
 2. ¿Qué hace que repetir una fecha no duplique ventas? ¿Qué pasaría si cargar solo hiciera INSERT ?
