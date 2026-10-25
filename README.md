@@ -288,8 +288,8 @@ FAILED tests/test_reglas.py::test_calidad_rechaza_sobre_el_umbral - NotImplement
 
 ### INTEGRACION CONTINUA
 
-#### se actualiza previamente el archivo ci.yml de github, se actualiza el repositorio de GITHUB
-### Este YAML valida el código y ejecuta las pruebas automatizadas. No vuelve a procesar los tres CSV ni levanta PostgreSQL para ejecutar sql/verificacion.sql.
+#### Se actualiza previamente el archivo ci.yml de github, se actualiza el repositorio de GITHUB
+#### Este YAML valida el código y ejecuta las pruebas automatizadas. No vuelve a procesar los tres CSV ni levanta PostgreSQL para ejecutar sql/verificacion.sql.
 
 <img width="700" height="880" alt="image" src="https://github.com/user-attachments/assets/c2846b66-5255-4ec6-850b-0651d8aae15b" />
 
@@ -354,11 +354,124 @@ FAILED tests/test_reglas.py::test_calidad_rechaza_sobre_el_umbral - NotImplement
 
 ## Respuestas
 
-1. TODO
-2. TODO
-3. TODO
-4. TODO
+1. ¿Por qué falló la corrida del 7 de octubre? ¿Qué habría quedado en la base si no existiera
+validar_calidad ?
+
+La corrida del 7 de octubre falla dado que el nivel de rechazos  fue superior al 20%, llegando aun 58,5%.  Según log la de la tarea transformar la mayoría de los errores era por precio invalido en el archivo  CSV de entrada. 
+
+
+<img width="700" height="424" alt="image" src="https://github.com/user-attachments/assets/ec07c7e6-1755-4e01-9d2b-1a56ef0654c8" />
+
+<img width="700" height="655" alt="image" src="https://github.com/user-attachments/assets/8394da18-d454-4823-8a2f-a74c57518319" />
+
+
+2. ¿Qué hace que repetir una fecha no duplique ventas? ¿Qué pasaría si cargar solo hiciera INSERT ?
+
+Repetir el procesamiento del 5 de octubre no duplicó las ventas porque la tarea cargar está diseñada para ser idempotente: procesar varias veces la misma fecha produce el mismo resultado en las tablas, siempre que el archivo de entrada no cambie y la ejecución termine correctamente.
+
+La clave está en estas instrucciones SQL de la tarea cargar de tu DAG etl_ventas_diarias.py
+DELETE FROM ventas_limpias
+WHERE fecha = %s;
+DELETE FROM ventas_rechazadas
+WHERE fecha_archivo = %s;
+
+Además, la eliminación y las inserciones se realizan dentro de una única transacción. Si ocurre un error durante la carga, PostgreSQL puede revertir las operaciones y conservar los datos anteriores, en lugar de dejar la fecha parcialmente cargada.
+
+Si se elimina DELETE y se conserva únicamente las inserciones, el resultado dependería de las restricciones de la tabla.
+En ventas_limpias se tiene:
+id_venta INTEGER PRIMARY KEY
+
+La transacción fallaría y se revertiría la carga. Esto evita duplicar filas con el mismo identificador, pero no es una solución de idempotencia suficiente: la ejecución repetida terminaría con error en vez de completar correctamente.
+
+En ventas_rechazadas si se vuelve a insertar rechazos de la misma fecha y línea, también se provoca una violación de clave primaria. Si cambian las líneas o sus claves, podrían aparecer registros duplicados lógicos.
+
+3. ¿Por qué las pruebas del CI pueden correr sin PostgreSQL ni el scheduler? Nombra una cosa que
+esas pruebas no comprueban.
+
+Las pruebas del CI pueden ejecutarse sin PostgreSQL ni el scheduler de Airflow porque prueban principalmente la lógica del código y la estructura del DAG, sin ejecutar el ETL completo.
+
+En el laboratorio:
+- tests/test_reglas.py prueba las funciones de limpieza y validación de dags/ventas/reglas.py usando pytest.
+- tests/test_integridad_dag.py comprueba que el DAG se cargue sin errores, que no tenga ciclos y que las tareas y sus dependencias estén correctamente configuradas.
+  
+Estas pruebas no necesitan una base de datos ni un scheduler en ejecución, pueden importar los módulos y verificar su comportamiento directamente.
+
+Una cosa que no comprueban: que la carga real de ventas funcione correctamente contra PostgreSQL, incluyendo las transacciones, las inserciones y las restricciones de la base de datos. Para eso se necesitaria pruebas de integración con una instancia de PostgreSQL.
+
+4. ¿Por qué tiene sentido que validar_calidad no reintente y que extraer sí?
+
+Tiene sentido porque extraer puede fallar por problemas temporales, mientras que validar_calidad puede fallar por problemas en los datos que no se solucionan repitiendo la tarea.
+- extraer sí reintenta: si ocurre un error temporal al leer el CSV, puede tener sentido intentarlo nuevamente. Por ejemplo, un archivo podría estar temporalmente inaccesible.
+- validar_calidad no reintenta: si la tasa de rechazo supera el 20 %, volver a ejecutar la misma validación con los mismos datos normalmente producirá el mismo resultado. Es preferible corregir el archivo o las reglas antes de intentarlo otra vez.
 
 ## Pull request
 
-TODO
+Estas evidencias están en el archivo del repositorio: "Taller modulo 6 y 7.xls", que se puede visualizar y descargar
+También estas evidencias están en este README, en una sección previa a esta. 
+De todas formas se vuelven a presentar:
+
+### INTEGRACION CONTINUA
+
+#### Se actualiza previamente el archivo ci.yml de github, se actualiza el repositorio de GITHUB
+#### Este YAML valida el código y ejecuta las pruebas automatizadas. No vuelve a procesar los tres CSV ni levanta PostgreSQL para ejecutar sql/verificacion.sql.
+
+<img width="700" height="880" alt="image" src="https://github.com/user-attachments/assets/c2846b66-5255-4ec6-850b-0651d8aae15b" />
+
+
+#### Se crea otra rama de GITHUB, feature/precio-cero
+
+<img width="700" height="379" alt="image" src="https://github.com/user-attachments/assets/0650c75e-1a63-4161-9b24-deef476023f8" />
+
+#### despues de actualizar reglas.py para que aceptara valores en cero, se actuaiza la version en la nueva rama
+
+
+<img width="700" height="601" alt="image" src="https://github.com/user-attachments/assets/8bc6a8e3-cb3e-4e74-944e-17a79540933e" />
+
+#### en GITHUB se compara y se realiza el pull request
+
+<img width="700" height="192" alt="image" src="https://github.com/user-attachments/assets/1780aec1-883b-48df-8014-64dc1a074ffb" />
+
+
+#### se abre la solicitud y se activa el pull
+
+
+<img width="700" height="846" alt="image" src="https://github.com/user-attachments/assets/827241e6-7320-47cf-a503-9a7406dc2da1" />
+
+
+#### El CI falla en ejecutar pruebas automatizadas
+
+<img width="700" height="640" alt="image" src="https://github.com/user-attachments/assets/2b37f271-b42c-428c-93ec-c5a022007192" />
+
+
+#### se visualiza  el CI fallido
+
+<img width="700" height="659" alt="image" src="https://github.com/user-attachments/assets/0bbce578-b276-486a-b81c-867defb559c7" />
+
+#### se revierte el cambio en GITHUB
+
+<img width="700" height="590" alt="image" src="https://github.com/user-attachments/assets/e544049c-3926-4e8f-a55d-8b5b65f93c58" />
+
+
+#### la nueva ejecucion de CI es satisfactoria
+
+<img width="700" height="1014" alt="image" src="https://github.com/user-attachments/assets/72085087-2b8f-44f8-8ce6-12e667c17407" />
+
+#### visualizacion de la ejecucion satisfactoria del CI
+
+<img width="700" height="433" alt="image" src="https://github.com/user-attachments/assets/793cacf0-4983-4d49-84c2-9579231bfe71" />
+
+
+#### se busca en GITHUB la solicitud de pull para hacer el merge
+
+
+<img width="700" height="567" alt="image" src="https://github.com/user-attachments/assets/911b437d-ab83-4de0-9ae3-3c4d0373fb77" />
+
+
+#### se realiza el merge
+
+<img width="700" height="998" alt="image" src="https://github.com/user-attachments/assets/f94fc8b4-57fe-4ac4-a2a2-363d8436b023" />
+
+#### confirmacion del revert, pull request fusionada sobre la rama principal
+
+<img width="700" height="618" alt="image" src="https://github.com/user-attachments/assets/268ccf35-fb47-4dd1-92e1-aae5ba6ab15d" />
+
